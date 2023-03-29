@@ -62,20 +62,20 @@ jobs:
     - name: Ready the springboot artifacts
       run: find -name '*.jar' -executable -type f  -exec zip release.zip {} +
 
-    - name: Analyze with SonarCloud
-      run: |
-        cd kernel
-        mvn -B -Dgpg.skip verify sonar:sonar -Dsonar.projectKey=mosip_kernel-ref-idobjectvalidator -Dsonar.organization=${{ secrets.ORG_KEY }} -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=${{ secrets.SONAR_TOKEN }}
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-    - uses: 8398a7/action-slack@v3
-      with:
-        status: ${{ job.status }}
-        fields: repo,message,commit,author,action,eventName,ref,workflow,job,took # selectable (default: repo,message)
-      env:
-        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }} # required
-      if: failure() # Pick up events even if the job fails or is canceled.
+#    - name: Analyze with SonarCloud
+#      run: |
+#        cd kernel
+#        mvn -B -Dgpg.skip verify sonar:sonar -Dsonar.projectKey=mosip_kernel-ref-idobjectvalidator -Dsonar.organization=${{ secrets.ORG_KEY }} -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=${{ secrets.SONAR_TOKEN }}
+#      env:
+#        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+#    - uses: 8398a7/action-slack@v3
+#      with:
+#        status: ${{ job.status }}
+#        fields: repo,message,commit,author,action,eventName,ref,workflow,job,took # selectable (default: repo,message)
+#      env:
+#        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }} # required
+#      if: failure() # Pick up events even if the job fails or is canceled.
 
 
 
@@ -126,13 +126,13 @@ jobs:
       - name: Ready the springboot artifacts
         run: find -name '*.jar' -executable -type f  -exec zip release.zip {} +
 
-      - name: Analyze with SonarCloud
-        run: |
-          cd pre-registration-booking-service
-          mvn -B -Dgpg.skip verify sonar:sonar -Dsonar.projectKey=mosip_pre-registration-booking-service -Dsonar.organization=${{ secrets.ORG_KEY }} -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=${{ secrets.SONAR_TOKEN }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+#      - name: Analyze with SonarCloud
+#        run: |
+#          cd pre-registration-booking-service
+#          mvn -B -Dgpg.skip verify sonar:sonar -Dsonar.projectKey=mosip_pre-registration-booking-service -Dsonar.organization=${{ secrets.ORG_KEY }} -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=${{ secrets.SONAR_TOKEN }}
+#        env:
+#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
       - name: Build image
         run: |
@@ -157,13 +157,13 @@ jobs:
           echo VERSION=$VERSION
           docker tag $SERVICE_NAME $IMAGE_ID:$VERSION
           docker push $IMAGE_ID:$VERSION
-      - uses: 8398a7/action-slack@v3
-        with:
-          status: ${{ job.status }}
-          fields: repo,message,commit,author,action,eventName,ref,workflow,job,took # selectable (default: repo,message)
-        env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }} # required
-        if: failure() # Pick up events even if the job fails or is canceled.
+#      - uses: 8398a7/action-slack@v3
+#        with:
+#          status: ${{ job.status }}
+#          fields: repo,message,commit,author,action,eventName,ref,workflow,job,took # selectable (default: repo,message)
+#        env:
+#          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }} # required
+#        if: failure() # Pick up events even if the job fails or is canceled.
 
   publish_to_nexus_kernel_prereg:
     if: "!contains(github.ref, 'master')"
@@ -226,20 +226,20 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
           GPG_TTY: $(tty)
-      - uses: 8398a7/action-slack@v3
-        with:
-          status: ${{ job.status }}
-          fields: repo,message,commit,author,action,eventName,ref,workflow,job,took # selectable (default: repo,message)
-        env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }} # required
-        if: failure() # Pick up events even if the job fails or is canceled.
+#      - uses: 8398a7/action-slack@v3
+#        with:
+#          status: ${{ job.status }}
+#          fields: repo,message,commit,author,action,eventName,ref,workflow,job,took # selectable (default: repo,message)
+#        env:
+#          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }} # required
+#        if: failure() # Pick up events even if the job fails or is canceled.
 
 
 
   build-docker-registration-processor-external-stage:
     runs-on: ubuntu-latest
     env:
-      NAMESPACE: mosipdev
+      NAMESPACE: ${{ secrets. dev_namespace_docker_hub }}
       SERVICE_NAME: registration-processor-external-stage
       SERVICE_LOCATION: registration-processor/registration-processor-external-stage
 
@@ -315,19 +315,19 @@ jobs:
           echo VERSION=$VERSION
           docker tag $SERVICE_NAME $IMAGE_ID:$VERSION
           docker push $IMAGE_ID:$VERSION
-    - uses: 8398a7/action-slack@v3
-      with:
-        status: ${{ job.status }}
-        fields: repo,message,commit,author,action,eventName,ref,workflow,job,took # selectable (default: repo,message)
-      env:
-        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }} # required
-      if: failure() # Pick up events even if the job fails or is canceled.
+#    - uses: 8398a7/action-slack@v3
+#      with:
+#        status: ${{ job.status }}
+#        fields: repo,message,commit,author,action,eventName,ref,workflow,job,took # selectable (default: repo,message)
+#      env:
+#        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }} # required
+#      if: failure() # Pick up events even if the job fails or is canceled.
 
 
   build-docker-registration-processor-external-integration-service:
     runs-on: ubuntu-latest
     env:
-      NAMESPACE: mosipdev
+      NAMESPACE: ${{ secrets. dev_namespace_docker_hub }}
       SERVICE_NAME: registration-processor-external-integration-service
       SERVICE_LOCATION: registration-processor/registration-processor-external-integration-service
 
@@ -404,13 +404,13 @@ jobs:
           echo VERSION=$VERSION
           docker tag $SERVICE_NAME $IMAGE_ID:$VERSION
           docker push $IMAGE_ID:$VERSION
-    - uses: 8398a7/action-slack@v3
-      with:
-        status: ${{ job.status }}
-        fields: repo,message,commit,author,action,eventName,ref,workflow,job,took # selectable (default: repo,message)
-      env:
-        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }} # required
-      if: failure() # Pick up events even if the job fails or is canceled.
+#    - uses: 8398a7/action-slack@v3
+#      with:
+#        status: ${{ job.status }}
+#        fields: repo,message,commit,author,action,eventName,ref,workflow,job,took # selectable (default: repo,message)
+#      env:
+#        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }} # required
+#      if: failure() # Pick up events even if the job fails or is canceled.
 
 
   build-cache-provider-hazelcast:
@@ -463,13 +463,13 @@ jobs:
       - name: Ready the springboot artifacts
         run: find -name '*.jar' -executable -type f  -exec zip release.zip {} +
 
-      - uses: 8398a7/action-slack@v3
-        with:
-          status: ${{ job.status }}
-          fields: repo,message,commit,author,action,eventName,ref,workflow,job,took # selectable (default: repo,message)
-        env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }} # required
-        if: failure() # Pick up events even if the job fails or is canceled.
+#      - uses: 8398a7/action-slack@v3
+#        with:
+#          status: ${{ job.status }}
+#          fields: repo,message,commit,author,action,eventName,ref,workflow,job,took # selectable (default: repo,message)
+#        env:
+#          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }} # required
+#        if: failure() # Pick up events even if the job fails or is canceled.
 
   publish-cache-provider-hazelcast:
     if: "!contains(github.ref, 'master')"
@@ -528,13 +528,13 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
           GPG_TTY: $(tty)
-      - uses: 8398a7/action-slack@v3
-        with:
-          status: ${{ job.status }}
-          fields: repo,message,commit,author,action,eventName,ref,workflow,job,took # selectable (default: repo,message)
-        env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }} # required
-        if: failure() # Pick up events even if the job fails or is canceled.
+#      - uses: 8398a7/action-slack@v3
+#        with:
+#          status: ${{ job.status }}
+#          fields: repo,message,commit,author,action,eventName,ref,workflow,job,took # selectable (default: repo,message)
+#        env:
+#          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }} # required
+#        if: failure() # Pick up events even if the job fails or is canceled.
 
 
   build-authentication-ref-impl:
@@ -582,13 +582,13 @@ jobs:
       - name: Ready the springboot artifacts
         run: find -name '*.jar' -executable -type f  -exec zip release.zip {} +
 
-      - uses: 8398a7/action-slack@v3
-        with:
-          status: ${{ job.status }}
-          fields: repo,message,commit,author,action,eventName,ref,workflow,job,took # selectable (default: repo,message)
-        env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }} # required
-        if: failure() # Pick up events even if the job fails or is canceled.
+#      - uses: 8398a7/action-slack@v3
+#        with:
+#          status: ${{ job.status }}
+#          fields: repo,message,commit,author,action,eventName,ref,workflow,job,took # selectable (default: repo,message)
+#        env:
+#          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }} # required
+#        if: failure() # Pick up events even if the job fails or is canceled.
 
 
   publish-authentication-ref-impl:
@@ -642,13 +642,13 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
           GPG_TTY: $(tty)
-      - uses: 8398a7/action-slack@v3
-        with:
-          status: ${{ job.status }}
-          fields: repo,message,commit,author,action,eventName,ref,workflow,job,took # selectable (default: repo,message)
-        env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }} # required
-        if: failure() # Pick up events even if the job fails or is canceled.
+#      - uses: 8398a7/action-slack@v3
+#        with:
+#          status: ${{ job.status }}
+#          fields: repo,message,commit,author,action,eventName,ref,workflow,job,took # selectable (default: repo,message)
+#        env:
+#          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }} # required
+#        if: failure() # Pick up events even if the job fails or is canceled.
 
   sonar-authentication-ref-impl:
     runs-on: ubuntu-latest
@@ -695,21 +695,21 @@ jobs:
       - name: Ready the springboot artifacts
         run: find -name '*.jar' -executable -type f  -exec zip release.zip {} +
 
-      - name: Analyze with SonarCloud
-        run: |
-          cd authentication
-          mvn -B -Dgpg.skip verify sonar:sonar -Dsonar.projectKey=mosip_biosdk-client -Dsonar.organization=${{ secrets.ORG_KEY }} -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=${{ secrets.SONAR_TOKEN }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+#      - name: Analyze with SonarCloud
+#        run: |
+#          cd authentication
+#          mvn -B -Dgpg.skip verify sonar:sonar -Dsonar.projectKey=mosip_biosdk-client -Dsonar.organization=${{ secrets.ORG_KEY }} -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=${{ secrets.SONAR_TOKEN }}
+#        env:
+#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
-      - uses: 8398a7/action-slack@v3
-        with:
-          status: ${{ job.status }}
-          fields: repo,message,commit,author,action,eventName,ref,workflow,job,took # selectable (default: repo,message)
-        env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }} # required
-        if: failure() # Pick up events even if the job fails or is canceled.
+#      - uses: 8398a7/action-slack@v3
+#        with:
+#          status: ${{ job.status }}
+#          fields: repo,message,commit,author,action,eventName,ref,workflow,job,took # selectable (default: repo,message)
+#        env:
+#          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }} # required
+#        if: failure() # Pick up events even if the job fails or is canceled.
 
 
 
